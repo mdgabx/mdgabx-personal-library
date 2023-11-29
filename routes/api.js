@@ -12,9 +12,28 @@ const { BookModel } = require('../model')
 module.exports = function (app) {
 
   app.route('/api/books')
-    .get(function (req, res){
+    .get(async (req, res) => {
       //response will be array of book objects
       //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
+
+      try {
+
+        const allBooks = await BookModel.find({}, '_id title comments')
+
+        const booksWithComments = allBooks.map((book) => {
+          return {
+            _id: book._id,
+            title: book.title,
+            commentcount: book.comments.length
+          }
+        })
+
+        res.json(booksWithComments)
+
+      } catch (err) {
+        res.status(500).json({ error: `Server error: ${err}`  })
+      }
+
     })
     
     .post(async (req, res) => {
@@ -28,7 +47,7 @@ module.exports = function (app) {
         } else {
           const newBook = await BookModel.create({ title: title })
 
-          res.status(201).json(newBook);
+          res.json(newBook);
         }
       } catch (err) {
         return res.status(500).json({ error: 'Server error' });

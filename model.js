@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
 const BookSchema = new mongoose.Schema({
-    title: { type: String },
-    comment: [String]
+    title: { type: String, required: true },
+    comments: [String]
 })
 
 const BookModel = mongoose.model("BookModel", BookSchema)

@@ -17,12 +17,22 @@ module.exports = function (app) {
       //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
     })
     
-    .post(function (req, res){
+    .post(async (req, res) => {
       let title = req.body.title;
-      //response will contain new book object including atleast _id and title
+      // Response will contain a new book object including at least _id and title
 
-      console.log('title', title)
+      try {
+    
+        if (!title) {
+          return res.send('missing required field title');
+        } else {
+          const newBook = await BookModel.create({ title: title })
 
+          res.status(201).json(newBook);
+        }
+      } catch (err) {
+        return res.status(500).json({ error: 'Server error' });
+      }
     })
     
     .delete(function(req, res){

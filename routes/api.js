@@ -61,9 +61,24 @@ module.exports = function (app) {
 
 
   app.route('/api/books/:id')
-    .get(function (req, res){
+    .get(async (req, res) => {
       let bookid = req.params.id;
       //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
+
+      try {
+
+        const book = await BookModel.findById(bookid, '_id title comments')
+
+        if(!book) {
+          return res.send('no book exists')
+        }
+
+        res.json(book)
+
+      } catch (err) {
+        res.status(500).json({ error: `Server error: ${err}` })
+      }
+
     })
     
     .post(function(req, res){

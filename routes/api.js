@@ -5,6 +5,7 @@
 *       
 *       
 */
+const { BookModel } = require('../model')
 
 'use strict';
 
@@ -20,7 +21,7 @@ module.exports = function (app) {
       let title = req.body.title;
       //response will contain new book object including atleast _id and title
 
-      
+      console.log('title', title)
 
     })
     

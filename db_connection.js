@@ -8,3 +8,5 @@ if(db) {
 } else {
     console.warn('connection has issues please check')
 }
+
+module.exports = db;

@@ -54,8 +54,19 @@ module.exports = function (app) {
       }
     })
     
-    .delete(function(req, res){
+    .delete(async(req, res) => {
       //if successful response will be 'complete delete successful'
+
+      try { 
+
+        const book = await BookModel.deleteMany({})
+
+        res.send('complete delete successful')
+
+      } catch (err) {
+        res.status(500).json(`Server error: ${err}`)
+      }
+
     });
 
 

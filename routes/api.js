@@ -20,10 +20,15 @@ module.exports = function (app) {
 
         const allBooks = await BookModel.find({}, '_id title comments')
 
+        if (!allBooks) {
+          return res.send('no books exist');
+        }
+
         const booksWithComments = allBooks.map((book) => {
           return {
             _id: book._id,
             title: book.title,
+            comments: book.comments,
             commentcount: book.comments.length
           }
         })
@@ -59,7 +64,7 @@ module.exports = function (app) {
 
       try { 
 
-        const book = await BookModel.deleteMany({})
+        await BookModel.deleteMany({})
 
         res.send('complete delete successful')
 

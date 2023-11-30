@@ -81,10 +81,33 @@ module.exports = function (app) {
 
     })
     
-    .post(function(req, res){
+    .post(async (req, res) => {
       let bookid = req.params.id;
       let comment = req.body.comment;
       //json res format same as .get
+
+      if(!comment) {
+        return res.send('missing required field comment')
+      }
+
+      try {
+        const book = await BookModel.findById(bookid);
+    
+        if (!book) {
+          return res.send('no book exists');
+        }
+    
+        book.comments.push(comment);
+    
+        await book.save(); 
+    
+        const updatedBook = await BookModel.findById(bookid);
+    
+        res.json(updatedBook);
+      } catch (err) {
+        res.status(500).json(`Server Error: ${err}`);
+      }
+
     })
     
     .delete(function(req, res){

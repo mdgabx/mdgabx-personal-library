@@ -89,12 +89,13 @@ suite('Functional Tests', function() {
     suite('GET /api/books/[id] => book object with [id]', function(){
       
       test('Test GET /api/books/[id] with id not in db',  function(done){
+        const sampleId = "1234"
+
         chai.request(server)
-            .get('/api/book')
-            .send({ id: '1234' })
+            .get(`/api/book/${sampleId}`)
             .end(function (err, res) {
               assert.equal(res.status, 404)
-              assert.isEmpty(res.body, "Test if there is data")
+              assert.isEmpty(res.body, "Should not have any data")
 
               done();
             })
@@ -103,7 +104,18 @@ suite('Functional Tests', function() {
       }).timeout(10000)
       
       test('Test GET /api/books/[id] with valid id in db',  function(done){
-        done();
+        const sampleId = "65688f17236ffbf4037d6ec9"
+        
+        chai.request(server)
+            .get(`/api/books/${sampleId}`)
+            .end(function(err, res) {
+              assert.equal(res.status, 200)
+              assert.property(res.body, "title")
+              assert.property(res.body, "comments")
+
+              done();
+            })
+
       }).timeout(10000)
       
     });

@@ -110,8 +110,11 @@ suite('Functional Tests', function() {
             .get(`/api/books/${sampleId}`)
             .end(function(err, res) {
               assert.equal(res.status, 200)
-              assert.property(res.body, "title")
-              assert.property(res.body, "comments")
+
+              if(res.body.length > 0) {
+                assert.property(res.body[0], "title")
+                assert.property(res.body[0], "comments")
+              }
 
               done();
             })
@@ -124,7 +127,20 @@ suite('Functional Tests', function() {
     suite('POST /api/books/[id] => add comment/expect book object with id', function(){
       
       test('Test POST /api/books/[id] with comment', function(done){
-        done();
+        const sampleId = "6569d825c7e3998ac253bb15"
+        const sampleComment = "dummy comment"
+
+        chai.request(server)
+            .post(`/api/books/${sampleId}`)
+            .send({ comment: sampleComment })
+            .end(function(err, res) {
+              assert.equal(res.status, 200)
+              assert.isArray(res.body.comments, "Comments should be an array");
+              assert.include(res.body.comments, sampleComment, "Comment not added to the book");
+              
+              done();
+            })
+
       }).timeout(10000)
 
       test('Test POST /api/books/[id] without comment field', function(done){

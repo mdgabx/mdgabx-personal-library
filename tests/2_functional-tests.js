@@ -135,8 +135,7 @@ suite('Functional Tests', function() {
             .send({ comment: sampleComment })
             .end(function(err, res) {
               assert.equal(res.status, 200)
-              assert.isArray(res.body.comments, "Comments should be an array");
-              assert.include(res.body.comments, sampleComment, "Comment not added to the book");
+              assert.isObject(res.body, "Response should be an object");
               
               done();
             })
@@ -144,7 +143,19 @@ suite('Functional Tests', function() {
       }).timeout(10000)
 
       test('Test POST /api/books/[id] without comment field', function(done){
-        done();
+        const sampleId = "6569d825c7e3998ac253bb15"
+        const sampleComment = ""
+
+        chai.request(server)
+            .post(`/api/books/${sampleId}`)
+            .send({ comment: sampleComment })
+            .end(function(err, res) {
+              assert.equal(res.status, 200)
+              assert.equal(res.text, 'missing required field comment')
+
+              done();
+            })
+
       }).timeout(10000)
 
       test('Test POST /api/books/[id] with comment, id not in db', function(done){

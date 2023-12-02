@@ -137,7 +137,7 @@ module.exports = function (app) {
           return res.send('no book exists')
         }
 
-        res.json('delete successful')
+        res.send('delete successful')
 
       } catch (err) {
         res.status(500).json(`Server error: ${err}`)

@@ -179,11 +179,30 @@ suite('Functional Tests', function() {
     suite('DELETE /api/books/[id] => delete book object id', function() {
 
       test('Test DELETE /api/books/[id] with valid id in db', function(done){
-        done();
+        const sampleId = "656b26b14fc91d419c7c040b"
+        
+        chai.request(server)
+            .delete(`/api/books/${sampleId}`)
+            .end(function(err, res) {
+              assert.equal(res.status, 200)
+              assert.equal(res.text, 'delete successful')
+
+              done();
+            })
       }).timeout(10000)
 
       test('Test DELETE /api/books/[id] with  id not in db', function(done){
-        done();
+        const sampleId = "156113"
+
+        chai.request(server)
+            .delete(`/api/books/${sampleId}`)
+            .end(function(err, res) {
+              assert.equal(res.status, 500)
+              assert.notProperty(res.body, "title")
+
+              done();
+            })
+
       }).timeout(10000)
 
     });

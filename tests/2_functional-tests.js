@@ -159,7 +159,19 @@ suite('Functional Tests', function() {
       }).timeout(10000)
 
       test('Test POST /api/books/[id] with comment, id not in db', function(done){
-        done();
+          const sampleId = "1451"
+          const sampleComment = "comment for an id which is not on db"
+          
+          chai.request(server)
+              .post(`/api/books/${sampleId}`)
+              .send({ comment: sampleComment })
+              .end(function (err, res) {
+                assert.equal(res.status, 500)
+                assert.notProperty(res.body, "title")
+
+                done();
+              })
+
       }).timeout(10000)
       
     });
